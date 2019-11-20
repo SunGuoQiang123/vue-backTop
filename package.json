@@ -1,0 +1,12 @@
+{
+  "name": "vue-back-top",
+  "description": "A component for back to top in long page",
+  "main": "lib/index.js",
+  "version": "0.0.1",
+  "scripts": {},
+  "author": "sunguoqiang",
+  "licence": "MIT",
+  "devDependencies": {
+    "vue": "^2.6.10"
+  }
+}
