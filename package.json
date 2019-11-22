@@ -1,12 +1,30 @@
 {
   "name": "vue-back-top",
   "description": "A component for back to top in long page",
-  "main": "lib/index.js",
+  "main": "dist/backTop.esm.js",
   "version": "0.0.1",
-  "scripts": {},
+  "scripts": {
+    "build": "rollup -c build/rollup.config.js"
+  },
+  "files": [
+    "dist",
+    "lib"
+  ],
   "author": "sunguoqiang",
   "licence": "MIT",
   "devDependencies": {
-    "vue": "^2.6.10"
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/preset-env": "^7.7.1",
+    "rollup": "^1.27.3",
+    "rollup-plugin-asset-url": "^0.1.1",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-vue": "^5.1.4",
+    "sass-loader": "^8.0.0",
+    "url-loader": "^2.3.0",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
   }
 }

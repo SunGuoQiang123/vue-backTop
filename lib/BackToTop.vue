@@ -40,7 +40,8 @@ export default {
   data() {
     return {
       visible: false,
-      el: null
+      el: null,
+      container: null
     }
   },
   computed: {
@@ -54,21 +55,22 @@ export default {
   mounted() {
     this.initEl();
     this.handleScroll();
-    this.el.addEventListener('scroll', this.handleScroll.bind(this));
-    this.el.addEventListener('resize', this.handleScroll.bind(this));
+    this.throttleScroll = this.throttle(this.handleScroll.bind(this), 300);
+
+    this.container.addEventListener('scroll', this.throttleScroll);
   },
   beforeDestroy() {
-    this.el.removeEventListener('scroll', this.handleScroll.bind(this));
-    this.el.removeEventListener('resize', this.handleScroll.bind(this));
+    this.container.removeEventListener('scroll', this.throttleScroll);
   },
   methods: {
     initEl() {
-      this.el = document.documentElement.scrollTop ? document.documentElement : document.body;
+      this.container = document;
       if (this.target) {
         this.el = typeof this.target === 'string' ? document.querySelector(this.target) : this.target;
         if (!this.el) {
           throw('target not existed!!!')
         }
+        this.container = this.el;
       }
     },
     handleBack(e) {
@@ -85,26 +87,43 @@ export default {
       rAF(fn);
     },
     getScrollTop() {
-      return this.el.scrollTop;
-      // if (this.target === document.body) {
-      //   return document.documentElement.scrollTop || document.body.scrollTop;
-      // } else {
-      //   return this.target.scrollTop;
-      // }
+      if (this.el) {
+        return this.el.scrollTop;
+      }
+      return document.documentElement.scrollTop || document.body.scrollTop;
     },
     handleScroll() {
       const top = this.getScrollTop();
       this.visible = top > this.height;
     },
     minusScrollTop(len) {
-      this.el.scrollTop -= len;
-      // if (this.target === document.body) {
-      //   document.documentElement.scrollTop ?
-      //     document.documentElement.scrollTop -= len :
-      //     document.body.scrollTop -= len;
-      // } else {
-      //   this.target.scrollTop -= len;
-      // }
+      if (this.el) {
+        this.el.scrollTop -= len;
+      }
+      document.documentElement.scrollTop > 0
+        ? document.documentElement.scrollTop -= len
+        : document.body.scrollTop -= len;
+    },
+    throttle(fn, wait) {
+      let timeout;
+      let last = 0;
+      return function(...args) {
+        const now = Date.now();
+        if (timeout) {
+          timeout = null;
+        }
+
+        function exec () {
+          last = now;
+          return fn.apply(null, args);
+        }
+
+        if (now - last >= wait) {
+          exec();
+        } else {
+          timeout = setTimeout(exec, wait - now + last);
+        }
+      }
     }
   }
 }
